@@ -1,21 +1,21 @@
-ddef func(x,y,z):
+def func(x,y,z):
     return x**2+y**3+z**2
 
 
 def convertXYZ(X,Y,Z):
-    return Z+X/2,(3)**(1/2)/2*X
+    return Z+X/2,np.sqrt(3)/2*X
 
-def Gridmake3(dx=0.01):
+def Gridmake3(n=100): # n等分
     x = []
     y = []
     z = []
-    for i in np.arange(0,1+dx,dx):
-        for j in np.arange(0,1-i+dx,dx):
-            k = 1-i-j
+    for i in np.arange(0,1+n):
+        for j in np.arange(0,1-i+n):
+            k = n-i-j
             x.append(i)
             y.append(j)
             z.append(k)
-    return np.array(x),np.array(y),np.array(z)
+    return np.array(x)/n,np.array(y)/n,np.array(z)/n
 
 
 import numpy as np
@@ -36,13 +36,6 @@ plt.gca().spines['top'].set_visible(False)
 
 h = np.sqrt(3.0)*0.5
 
-#内側目盛
-'''
-for i in range(1,10):
-    ax1.plot([i/20.0, 1.0-i/20.0],[h*i/10.0, h*i/10.0], color='gray', lw=0.5)
-    ax1.plot([i/20.0, i/10.0],[h*i/10.0, 0.0], color='gray', lw=0.5)
-    ax1.plot([0.5+i/20.0, i/10.0],[h*(1.0-i/10.0), 0.0], color='gray', lw=0.5)
-'''
 
 #外周
 ax1.plot([0.0, 1.0],[0.0, 0.0], 'k-', lw=2)
@@ -61,7 +54,7 @@ for i in range(1,10):
     ax1.text(i/10.0-0.03, -0.025, '%d0' % i, fontsize=10, rotation=60)
 
 # データ作る
-x0,y0,z0 = Gridmake3(dx=0.002)
+x0,y0,z0 = Gridmake3(n=50)
 val = func(x0,y0,z0)
 X,Y = convertXYZ(x0,y0,z0)
 
@@ -69,6 +62,7 @@ X,Y = convertXYZ(x0,y0,z0)
 mappable = ax1.scatter(X,Y,c=val,cmap='jet',alpha=0.9)
 fig.colorbar(mappable, ax=ax1)
 
+#内側目盛
 for i in range(1,10):
     ax1.plot([i/20.0, 1.0-i/20.0],[h*i/10.0, h*i/10.0], color='gray', lw=0.5)
     ax1.plot([i/20.0, i/10.0],[h*i/10.0, 0.0], color='gray', lw=0.5)
@@ -87,6 +81,6 @@ if mode == 'min':
     x = X[ind]
     y = Y[ind]
     ax1.scatter(x,y,c='w')
-    ax1.text(x,y,'(x,y,z)=({:.3f},{:.3f},{:.3f})\nmin:{:.3f}'.format(x0[ind],y0[ind],z0[ind],val[ind]),c='y')
+    ax1.text(x,y,'(x,y,z)=({:.3f},{:.3f},{:.3f})\nmin:{:.3f}'.format(x0[ind],y0[ind],z0[ind],val[ind]),c='r')
 
 plt.show()
